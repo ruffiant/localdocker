@@ -11,8 +11,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - F:\wsl\lnmp\nginx\log\laravelgame.log:/usr/local/game/laravelgame.log;
-      - F:\wsl\lnmp\nginx\log\laravellanguage.log:/usr/local/game/laravellanguage.log;
+      - F:\wsl\lnmp\nginx\log\laravelgame.log:/usr/local/game/laravelgame.log
+      - F:\wsl\lnmp\nginx\log\laravellanguage.log:/usr/local/game/laravellanguage.log
       - F:\wsl\lnmp\nginx\rewrite\laravel.conf:/etc/nginx/rewrite/laravel.conf
       - F:\wsl\lnmp\nginx\enable-php-pathinfo.conf:/etc/nginx/enable-php-pathinfo.conf
       - F:\wsl\lnmp\nginx\nginx.conf:/etc/nginx/nginx.conf
@@ -20,9 +20,12 @@ services:
       - E:\www:/usr/share/nginx/html/
       - F:\wsl\lnmp\nginx\conf.d\www.laravelgame.com.conf:/etc/nginx/conf.d/www.laravelgame.com.conf
       - F:\wsl\lnmp\nginx\conf.d\www.laravellanguage.com.conf:/etc/nginx/conf.d/www.laravellanguage.com.conf
+      - F:\wsl\lnmp\nginx\log:/usr/local/game
     depends_on:
       - php8.0
       - mysql8.0
+    networks:
+      - my_network
       
   php8.0:
     image: php:8.0
@@ -36,9 +39,15 @@ services:
       - F:\wsl\lnmp\php\php\docker-php-ext-pdo_mysql.ini:/usr/local/etc/php/docker-php-ext-pdo_mysql.ini
       - F:\wsl\lnmp\php\php\docker-php-ext-sodium.ini:/usr/local/etc/php/docker-php-ext-sodium.ini
       - E:\www:/usr/share/nginx/html
+      - .:/app
+    command: >
+      bash -c "apt-get update && apt-get install -y iputils-ping && php-fpm"
+    networks:
+      - my_network
     depends_on:
       - mysql8.0
       - redis
+    
 
   mysql8.0:
     image: mysql:8.0
@@ -46,8 +55,12 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=laravel11demo
+      - MYSQL_ROOT_HOST=%    # 允许任何主机连接
     volumes:
       - F:\wsl\lnmp\mysql\data:/var/lib/mysql
+    networks:
+      - my_network
 
   redis:
     image: redis:7.4.2-bookworm
