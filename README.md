@@ -28,17 +28,18 @@
 ## 使用方法
 
 1. 克隆仓库：
+
    ```bash
    git clone [repository-url]
    cd localdocker
    ```
-
 2. 启动服务：
+
    ```bash
    docker-compose up -d
    ```
-
 3. 访问服务：
+
    - Nginx: http://localhost:80
    - PHP: localhost:9000
    - MySQL: localhost:3306
@@ -46,7 +47,7 @@
 
 ## 配置说明
 
-- MySQL root密码: 123456
+- MySQL root密码: *******
 - MySQL默认数据库: laravel11demo
 - 网站根目录: E:\www
 
